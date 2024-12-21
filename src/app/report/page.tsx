@@ -6,10 +6,10 @@ export default async function ReportPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const servicehall = (await searchParams).servicehall as string;
+  const serviceHall = (await searchParams).serviceHall as string;
   const id = (await searchParams).id as string;
 
-  if (!servicehall || !id) {
+  if (!serviceHall || !id) {
     return <div>Missing required parameters</div>;
   }
 

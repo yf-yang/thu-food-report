@@ -5,7 +5,7 @@ export default function EntryForm() {
     <Form action="/report" className="space-y-4">
       <div>
         <label
-          htmlFor="servicehall"
+          htmlFor="serviceHall"
           className="block text-sm font-medium text-gray-700"
         >
           Service Hall
