@@ -6,21 +6,27 @@ import {
   CarouselApi,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "./ui/carousel";
 import { Button } from "./ui/button";
-import CanvasPoster from "./poster";
+import {
+  PosterBasicStats,
+  PosterEarliestAndLatest,
+  PosterFavorite,
+  PosterFirstMeal,
+  PosterHabit,
+  PosterMeanCost,
+  PosterMostExpensive,
+  PosterMostNumStalls,
+  PosterVisitedDays,
+  ReportData,
+} from "./poster";
+import html2canvas from "html2canvas";
 
-export default function ReportCarousel({
-  reportData,
-}: {
-  reportData: Awaited<ReturnType<typeof import("@/action")["genReport"]>>;
-}) {
+export default function ReportCarousel({ reportData }: { reportData: ReportData }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const refs = useMemo(
-    () => Array.from({ length: 3 }).map(() => createRef<HTMLCanvasElement>()),
+    () => Array.from({ length: 3 }).map(() => createRef<HTMLDivElement>()),
     []
   );
 
@@ -33,14 +39,25 @@ export default function ReportCarousel({
     });
   }, [api]);
 
-  const handleSave = () => {
-    const canvas = refs[current].current;
-    if (canvas) {
-      const image = canvas.toDataURL("image/png");
+  const handleSave = async () => {
+    const element = refs[current].current;
+
+    try {
+      const canvas = await html2canvas(element!);
+      const data = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "chinese-poster.png";
-      link.href = image;
-      link.click();
+
+      if (typeof link.download === "string") {
+        link.href = data;
+        link.download = "capture.png";
+        link.style.display = "none";
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error("Error capturing element:", error);
     }
   };
 
@@ -48,16 +65,42 @@ export default function ReportCarousel({
     <>
       <Carousel setApi={setApi}>
         <CarouselContent>
-          {refs.map((ref, index) => (
-            <CarouselItem key={index}>
-              <CanvasPoster ref={ref} />
-            </CarouselItem>
-          ))}
+          <CarouselItem>
+            <PosterBasicStats data={reportData} ref={refs[0]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterFavorite data={reportData} ref={refs[1]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterMeanCost data={reportData} ref={refs[2]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterHabit data={reportData} ref={refs[3]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterFirstMeal data={reportData} ref={refs[4]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterEarliestAndLatest data={reportData} ref={refs[5]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterMostExpensive data={reportData} ref={refs[6]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterMostNumStalls data={reportData} ref={refs[7]} />
+          </CarouselItem>
+          <CarouselItem>
+            <PosterVisitedDays data={reportData} ref={refs[8]} />
+          </CarouselItem>
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
       </Carousel>
-      <Button onClick={handleSave}>保存图片</Button>
+      <div className="mt-2 flex justify-between w-[240px] align-text-bottom">
+        <Button onClick={handleSave}>保存图片</Button>
+        <div className="py-2 text-sm text-muted-foreground">
+          {current + 1} / 9
+        </div>
+        <Button>关于我们</Button>
+      </div>
     </>
   );
 }
