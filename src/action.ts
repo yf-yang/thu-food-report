@@ -127,7 +127,7 @@ function constructMealDataTable(dt: aq.ColumnTable) {
     const row = _row as Row;
     if (meal === null) {
       last = row;
-      meal = { ...row, stalls: [] };
+      meal = { ...row, stalls: [row.stall] };
       continue;
     }
 
@@ -147,7 +147,7 @@ function constructMealDataTable(dt: aq.ColumnTable) {
       const { stalls, ...other } = meal;
       meals.push({ ...other, numStalls: stalls.length });
       last = row;
-      meal = { ...row, stalls: [] };
+      meal = { ...row, stalls: [row.stall] };
     }
   }
 
