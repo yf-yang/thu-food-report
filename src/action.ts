@@ -159,7 +159,7 @@ function constructMealDataTable(dt: aq.ColumnTable) {
 function analyze(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
   return {
     ...basicStats(dt, mdt),
-    ...most(dt, mdt),
+    ...favorite(dt, mdt),
     ...cost(dt, mdt),
     ...time(dt, mdt),
     ...newYearFirstMeal(dt, mdt),
@@ -203,7 +203,7 @@ function basicStats(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
 // Most visited cafeteria.
 // Most spent cafeteria.
 // Most spent stall in the cafeteria.
-function most(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
+function favorite(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
   const { cafeteria: mostVisitedCafeteria, count: mostVisitedCafeteriaCount } =
     mdt
       .groupby("cafeteria")
@@ -314,19 +314,31 @@ function time(_dt: aq.ColumnTable, mdt: aq.ColumnTable) {
     .orderby(aq.desc("count"));
   let { hour, minute, count } = halfHourFrequency
     .filter((d) => d.hour < 10)
-    .object(0) as { hour: number; minute: number; count: number };
-  const breakfastMostFrequent = { hour, minute, count };
+    .object(0) as { hour?: number; minute?: number; count?: number };
+  const breakfastMostFrequent = {
+    hour: hour ?? 0,
+    minute: minute ?? 0,
+    count: count ?? 0,
+  };
 
   ({ hour, minute, count } = halfHourFrequency
     .filter((d) => d.hour >= 11 && d.hour < 14)
-    .object(0) as { hour: number; minute: number; count: number });
-  const lunchMostFrequent = { hour, minute, count };
+    .object(0) as { hour?: number; minute?: number; count?: number });
+  const lunchMostFrequent = {
+    hour: hour ?? 0,
+    minute: minute ?? 0,
+    count: count ?? 0,
+  };
 
   ({ hour, minute, count } = halfHourFrequency
     .filter((d) => d.hour >= 17)
-    .object(0) as { hour: number; minute: number; count: number });
+    .object(0) as { hour?: number; minute?: number; count?: number });
 
-  const dinnerMostFrequent = { hour, minute, count };
+  const dinnerMostFrequent = {
+    hour: hour ?? 0,
+    minute: minute ?? 0,
+    count: count ?? 0,
+  };
 
   return {
     breakfastMostFrequent,
@@ -354,35 +366,58 @@ function newYearFirstMeal(_dt: aq.ColumnTable, mdt: aq.ColumnTable) {
 }
 
 function mostExpensiveMeal(_dt: aq.ColumnTable, mdt: aq.ColumnTable) {
-  const { date: mostExpensiveMealDate, amount: mostExpensiveMealAmount } = mdt
-    .orderby(aq.desc("amount"))
-    .object(0) as {
+  const {
+    date: mostExpensiveMealDate,
+    amount: mostExpensiveMealAmount,
+    cafeteria: mostExpensiveMealCafeteria,
+  } = mdt.orderby(aq.desc("amount")).object(0) as {
     date: Date;
     amount: number;
+    cafeteria: string;
   };
-  return { mostExpensiveMealDate, mostExpensiveMealAmount };
+  return {
+    mostExpensiveMealDate,
+    mostExpensiveMealAmount,
+    mostExpensiveMealCafeteria,
+  };
 }
 
 function mostNumStallsMeal(_dt: aq.ColumnTable, mdt: aq.ColumnTable) {
-  const { date: mostNumStallsMealDate, stalls: mostNumStallsMealStalls } = mdt
-    .orderby(aq.desc("numStalls"))
-    .object(0) as {
+  const {
+    date: mostNumStallsMealDate,
+    numStalls: mostNumStallsMealStalls,
+    cafeteria: mostNumStallsCafeteria,
+  } = mdt.orderby(aq.desc("numStalls")).object(0) as {
     date: Date;
-    stalls: string[];
+    numStalls: number;
+    cafeteria: string;
   };
-  return { mostNumStallsMealDate, mostNumStallsMealStalls };
+  return {
+    mostNumStallsMealDate,
+    mostNumStallsMealStalls,
+    mostNumStallsCafeteria,
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
   const { uniqueDates } = dt
     .derive({
-      dateStr: (d) => `${op.month(d.date) + 1}-${op.date(d.date)}`,
+      dateStr: aq.escape(
+        // @ts-expect-error -- it works
+        (d) =>
+          `2024-${(op.month(d.date) + 1).toString().padStart(2, "0")}-${op
+            .date(d.date)
+            .toString()
+            .padStart(2, "0")}`
+      ),
     })
     .rollup({ uniqueDates: op.array_agg_distinct("dateStr") })
     .object(0) as {
     uniqueDates: string[];
   };
+
+  const numVisitedDates = uniqueDates.length;
 
   const validRanges = [
     [new Date("2024-01-01"), new Date("2024-01-08")],
@@ -407,7 +442,9 @@ function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
 
   for (const [start, end] of validRanges) {
     for (let d = start; d < end; d.setDate(d.getDate() + 1)) {
-      const dateStr = `${d.getMonth() + 1}-${d.getDate()}`;
+      const dateStr = `2024-${(d.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
       if (!uniqueDates.includes(dateStr)) {
         if (consecutiveNoRecordDateBegin === null) {
           consecutiveNoRecordDateBegin = dateStr;
@@ -437,6 +474,7 @@ function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
   }
 
   return {
+    numVisitedDates,
     maxConsecutiveNoRecordDateBegin,
     maxConsecutiveNoRecordDateEnd,
   };
