@@ -21,8 +21,13 @@ import {
   ReportData,
 } from "./poster";
 import html2canvas from "html2canvas";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export default function ReportCarousel({ reportData }: { reportData: ReportData }) {
+export default function ReportCarousel({
+  reportData,
+}: {
+  reportData: ReportData;
+}) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const refs = useMemo(
@@ -94,11 +99,41 @@ export default function ReportCarousel({ reportData }: { reportData: ReportData 
           </CarouselItem>
         </CarouselContent>
       </Carousel>
-      <div className="mt-2 flex justify-between w-[240px] align-text-bottom">
-        <Button onClick={handleSave}>保存图片</Button>
+      <div className="flex justify-between w-[240px] mt-2">
+        <Button
+          size="icon"
+          variant="outline"
+          disabled={!api?.canScrollPrev()}
+          onClick={() => {
+            if (!api) {
+              return;
+            }
+            api.scrollPrev();
+          }}
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span className="sr-only">Previous slide</span>
+        </Button>
         <div className="py-2 text-sm text-muted-foreground">
           {current + 1} / 9
         </div>
+        <Button
+          size="icon"
+          variant="outline"
+          disabled={!api?.canScrollNext()}
+          onClick={() => {
+            if (!api) {
+              return;
+            }
+            api.scrollNext();
+          }}
+        >
+          <ArrowRight className="h-4 w-4" />
+          <span className="sr-only">Next slide</span>
+        </Button>
+      </div>
+      <div className="mt-2 flex justify-between w-[240px]">
+        <Button onClick={handleSave}>保存图片</Button>
         <Button>关于我们</Button>
       </div>
     </>
