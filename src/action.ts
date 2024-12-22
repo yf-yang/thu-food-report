@@ -9,10 +9,10 @@ export async function fetchData(id: string, serviceHall: string) {
     "https://card.tsinghua.edu.cn/business/querySelfTradeList"
   );
 
-  let data = [];
+  const data = [];
 
   let pageNumber = 0;
-  let pageSize = 1000;
+  const pageSize = 1000;
 
   while (true) {
     url.searchParams.set("pageNumber", pageNumber.toString());
@@ -65,6 +65,10 @@ function decryptAesEcb(encrypted: string) {
 
 export async function genReport(id: string, serviceHall: string) {
   const data = await fetchData(id, serviceHall);
+
+  if (!data.length) {
+    throw new Error("empty");
+  }
 
   const dt = cleanDataFrame(createDataTable(data));
   const mdt = constructMealDataTable(dt);
