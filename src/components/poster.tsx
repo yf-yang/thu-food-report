@@ -240,7 +240,7 @@ export const PosterFirstMeal = forwardRef(function PosterFirstMeal(
       ref={ref}
       className="bg-[#623CEA] group darkBackground text-gray-100"
     >
-      <TextContainer className="text-center mt-[80px]">
+      <TextContainer className="text-center mt-[70px]">
         <div>
           <DateHighlight date={date} />
         </div>
@@ -365,7 +365,7 @@ export const PosterMostNumStalls = forwardRef(function PosterMostNumStalls(
   return (
     <Container ref={ref} className="bg-[#DAF76F]">
       <TextContainer>
-        <div className="text-center mt-[80px]">
+        <div className="text-center mt-[70px]">
           <div>
             <DateHighlight date={mostNumStallsMealDate} />在
             <LocationHighlight>{mostNumStallsCafeteria}</LocationHighlight>
@@ -446,10 +446,8 @@ const Container = forwardRef(function Container(
   ref: ForwardedRef<HTMLDivElement>
 ) {
   return (
-    <div
-      className={cn("size-[300px] border border-gray-300 rounded", className)}
-    >
-      <div className="size-full" ref={ref}>
+    <div className={cn("size-[300px] border border-gray-300 rounded")}>
+      <div className={cn("size-full", className)} ref={ref}>
         <div className="flex items-center justify-center">{children}</div>
       </div>
     </div>

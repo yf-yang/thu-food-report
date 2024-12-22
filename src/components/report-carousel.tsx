@@ -26,7 +26,7 @@ export default function ReportCarousel({ reportData }: { reportData: ReportData 
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const refs = useMemo(
-    () => Array.from({ length: 3 }).map(() => createRef<HTMLDivElement>()),
+    () => Array.from({ length: 9 }).map(() => createRef<HTMLDivElement>()),
     []
   );
 
@@ -49,7 +49,7 @@ export default function ReportCarousel({ reportData }: { reportData: ReportData 
 
       if (typeof link.download === "string") {
         link.href = data;
-        link.download = "capture.png";
+        link.download = `report_${current + 1}.png`;
         link.style.display = "none";
 
         document.body.appendChild(link);
