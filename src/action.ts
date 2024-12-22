@@ -98,10 +98,11 @@ function createDataTable(rows: object[]) {
 }
 
 function cleanDataFrame(dt: aq.ColumnTable) {
-  // stall should not container '饮水' and '淋浴' and '天猫' and '学生卡'
+  // stall should not container '饮水' and '淋浴' and '天猫' and '学生卡' and '打印'
   // XXX: Seems code 1210 are credits, other codes are debits. Any other credit codes?
   return dt.filter(
-    (d) => !op.match(d.stall, /饮水|淋浴|天猫|学生卡/, 0) && d.code === "1210"
+    (d) =>
+      !op.match(d.stall, /饮水|淋浴|天猫|学生卡|打印/, 0) && d.code === "1210"
   );
 }
 
