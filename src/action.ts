@@ -12,23 +12,23 @@ export async function fetchData(id: string, serviceHall: string) {
 
   const encrypted_string = (await data.json())["data"];
 
-  const decrypted_data = decrypt_aes_ecb(encrypted_string);
+  const decryptedData = decryptAesEcb(encrypted_string);
 
-  return JSON.parse(decrypted_data);
+  return JSON.parse(decryptedData);
 }
 
-function decrypt_aes_ecb(encrypted: string) {
+function decryptAesEcb(encrypted: string) {
   const key = encrypted.substring(0, 16);
   const data = encrypted.substring(16);
-  const data_bytes = Buffer.from(data, "base64");
+  const dataBytes = Buffer.from(data, "base64");
 
   const decipher = createDecipheriv("aes-128-ecb", key, null);
 
-  let decrypted_data = decipher.update(data_bytes, undefined, "utf-8");
+  let decryptedData = decipher.update(dataBytes, undefined, "utf-8");
 
-  decrypted_data += decipher.final();
+  decryptedData += decipher.final();
 
-  return decrypted_data;
+  return decryptedData;
 }
 
 export async function genReport(id: string, serviceHall: string) {
