@@ -13,7 +13,7 @@ export default async function ReportPage({
     return <div>Missing required parameters</div>;
   }
 
-  const reportData = await genReport();
+  const reportData = await genReport(id, serviceHall);
 
   return (
     <main className="flex flex-col items-center justify-center p-16">
