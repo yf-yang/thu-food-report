@@ -13,6 +13,7 @@ export async function fetchData(id: string, serviceHall: string) {
 
   let pageNumber = 0;
   const pageSize = 1000;
+  const maxRetries = 3;
 
   while (true) {
     url.searchParams.set("pageNumber", pageNumber.toString());
@@ -22,12 +23,20 @@ export async function fetchData(id: string, serviceHall: string) {
     url.searchParams.set("idserial", id);
     url.searchParams.set("tradetype", "-1");
 
-    const response = await fetch(url.toString(), {
-      method: "POST",
-      headers: { Cookie: `servicehall=${serviceHall}` },
-    });
+    let response;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        response = await fetch(url.toString(), {
+          method: "POST",
+          headers: { Cookie: `servicehall=${serviceHall}` },
+        });
+        if (response.ok) break;
+      } catch (error) {
+        if (attempt === maxRetries - 1) throw error;
+      }
+    }
 
-    const json = await response.json();
+    const json = await response!.json();
 
     const encryptedString = json["data"];
 
@@ -102,7 +111,8 @@ function cleanDataFrame(dt: aq.ColumnTable) {
   // XXX: Seems code 1210 are credits, other codes are debits. Any other credit codes?
   return dt.filter(
     (d) =>
-      !op.match(d.stall, /饮水|淋浴|天猫|学生卡|打印/, 0) && d.code === "1210"
+      !op.match(d.stall, /饮水|淋浴|天猫|学生卡|打印|游泳/, 0) &&
+      d.code === "1210"
   );
 }
 
