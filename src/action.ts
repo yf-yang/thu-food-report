@@ -1,10 +1,39 @@
 "use server";
-import data from "./result.json";
 
 import * as aq from "arquero";
 import { op } from "arquero";
+import { createDecipheriv } from "crypto";
 
-export async function genReport() {
+export async function fetchData(id: string, serviceHall: string) {
+  const data = await fetch(
+    `https://card.tsinghua.edu.cn/business/querySelfTradeList?pageNumber=0&pageSize=5000&starttime=2024-01-01&endtime=2024-12-31&idserial=${id}&tradetype=-1`,
+    { method: "POST", headers: { Cookie: `servicehall=${serviceHall}` } }
+  );
+
+  const encrypted_string = (await data.json())["data"];
+
+  const decrypted_data = decrypt_aes_ecb(encrypted_string);
+
+  return JSON.parse(decrypted_data);
+}
+
+function decrypt_aes_ecb(encrypted: string) {
+  const key = encrypted.substring(0, 16);
+  const data = encrypted.substring(16);
+  const data_bytes = Buffer.from(data, "base64");
+
+  const decipher = createDecipheriv("aes-128-ecb", key, null);
+
+  let decrypted_data = decipher.update(data_bytes, undefined, "utf-8");
+
+  decrypted_data += decipher.final();
+
+  return decrypted_data;
+}
+
+export async function genReport(id: string, serviceHall: string) {
+  const data = await fetchData(id, serviceHall);
+
   const dt = cleanDataFrame(createDataTable(data.resultData.rows));
   const mdt = constructMealDataTable(dt);
   return analyze(dt, mdt);
