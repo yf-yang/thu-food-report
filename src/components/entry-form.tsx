@@ -1,4 +1,5 @@
 import Form from "next/form";
+import { Button } from "./ui/button";
 
 export default function EntryForm() {
   return (
@@ -30,12 +31,12 @@ export default function EntryForm() {
           required
         />
       </div>
-      <button
+      <Button
         type="submit"
         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         生成我的专属年度报告
-      </button>
+      </Button>
     </Form>
   );
 }

@@ -133,8 +133,10 @@ export default function ReportCarousel({
         </Button>
       </div>
       <div className="mt-2 flex justify-between w-[240px]">
-        <Button onClick={handleSave}>保存图片</Button>
-        <Button>关于我们</Button>
+        <Button onClick={handleSave} variant="secondary">
+          保存图片
+        </Button>
+        <Button variant="secondary">关于我们</Button>
       </div>
     </>
   );
