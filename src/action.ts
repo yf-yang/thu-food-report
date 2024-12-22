@@ -145,8 +145,8 @@ function constructMealDataTable(dt: aq.ColumnTable) {
     } else {
       const { stalls, ...other } = meal;
       meals.push({ ...other, numStalls: stalls.length });
-      last = null;
-      meal = null;
+      last = row;
+      meal = { ...row, stalls: [] };
     }
   }
 
@@ -300,6 +300,8 @@ function time(_dt: aq.ColumnTable, mdt: aq.ColumnTable) {
     .object(0) as {
     date: Date;
   };
+
+  console.log("latest", latest);
 
   // Breakfast: < 10:30
   // Lunch: 11:00 - 14:00
