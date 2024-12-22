@@ -413,7 +413,7 @@ function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
           `2024-${(op.month(d.date) + 1).toString().padStart(2, "0")}-${op
             .date(d.date)
             .toString()
-            .padStart(2, "0")}`
+            .padStart(2, "0")} 00:00:00+08:00`
       ),
     })
     .rollup({ uniqueDates: op.array_agg_distinct("dateStr") })
