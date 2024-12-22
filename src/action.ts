@@ -53,6 +53,13 @@ export async function fetchData(id: string, serviceHall: string) {
     pageNumber++;
   }
 
+  for (const row of data) {
+    if (row["meraddr"] === "-") {
+      // console.log(row);
+      row["meraddr"] = row["mername"].split("_")[0];
+    }
+  }
+
   return data;
 }
 
@@ -312,7 +319,7 @@ function time(_dt: aq.ColumnTable, mdt: aq.ColumnTable) {
     date: Date;
   };
 
-  console.log("latest", latest);
+  // console.log("latest", latest);
 
   // Breakfast: < 10:30
   // Lunch: 11:00 - 14:00
