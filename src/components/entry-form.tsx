@@ -1,9 +1,16 @@
+import { useState } from "react";
 import Form from "next/form";
 import { Button } from "./ui/button";
 
 export default function EntryForm() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = () => {
+    setIsLoading(true);
+  }
+
   return (
-    <Form action="/report" className="space-y-4">
+    <Form action="/report" className="space-y-4" onSubmit={onSubmit}>
       <div>
         <label
           htmlFor="serviceHall"
@@ -34,8 +41,9 @@ export default function EntryForm() {
       <Button
         type="submit"
         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        isLoading={isLoading}
       >
-        生成我的专属年度报告
+        {isLoading ? "生成中..." : "生成我的专属年度报告"}
       </Button>
     </Form>
   );
