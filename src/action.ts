@@ -93,7 +93,7 @@ function createDataTable(rows: object[]) {
     .from(rows, Object.keys(names))
     .rename(names)
     .derive({
-      date: (d) => op.parse_date(d.date),
+      date: (d) => op.parse_date(d.date + "+08:00"),
     });
 }
 
@@ -422,16 +422,39 @@ function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
   const numVisitedDates = uniqueDates.length;
 
   const validRanges = [
-    [new Date("2024-01-01"), new Date("2024-01-08")],
-    [new Date("2024-02-26"), new Date("2024-04-04")],
-    [new Date("2024-04-07"), new Date("2024-04-30")],
-    [new Date("2024-05-06"), new Date("2024-06-08")],
-    [new Date("2024-06-11"), new Date("2024-06-17")],
-    [new Date("2024-09-09"), new Date("2024-09-14")],
-    [new Date("2024-09-18"), new Date("2024-10-01")],
     [
-      new Date("2024-10-08"),
-      new Date("2024-12-31") < new Date() ? new Date("2024-12-31") : new Date(),
+      new Date("2024-01-01 00:00:00+08:00"),
+      new Date("2024-01-08 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-02-26 00:00:00+08:00"),
+      new Date("2024-04-04 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-04-07 00:00:00+08:00"),
+      new Date("2024-04-30 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-05-06 00:00:00+08:00"),
+      new Date("2024-06-08 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-06-11 00:00:00+08:00"),
+      new Date("2024-06-17 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-09-09 00:00:00+08:00"),
+      new Date("2024-09-14 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-09-18 00:00:00+08:00"),
+      new Date("2024-10-01 00:00:00+08:00"),
+    ],
+    [
+      new Date("2024-10-08 00:00:00+08:00"),
+      new Date("2024-12-31 00:00:00+08:00") < new Date()
+        ? new Date("2024-12-31 00:00:00+08:00")
+        : new Date(),
     ],
   ];
 
@@ -446,7 +469,10 @@ function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
     for (let d = start; d < end; d.setDate(d.getDate() + 1)) {
       const dateStr = `2024-${(d.getMonth() + 1)
         .toString()
-        .padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
+        .padStart(2, "0")}-${d
+        .getDate()
+        .toString()
+        .padStart(2, "0")} 00:00:00+08:00`;
       if (!uniqueDates.includes(dateStr)) {
         if (consecutiveNoRecordDateBegin === null) {
           consecutiveNoRecordDateBegin = dateStr;
