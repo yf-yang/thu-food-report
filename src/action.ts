@@ -5,16 +5,48 @@ import { op } from "arquero";
 import { createDecipheriv } from "crypto";
 
 export async function fetchData(id: string, serviceHall: string) {
-  const data = await fetch(
-    `https://card.tsinghua.edu.cn/business/querySelfTradeList?pageNumber=0&pageSize=5000&starttime=2024-01-01&endtime=2024-12-31&idserial=${id}&tradetype=-1`,
-    { method: "POST", headers: { Cookie: `servicehall=${serviceHall}` } }
+  const url = new URL(
+    "https://card.tsinghua.edu.cn/business/querySelfTradeList"
   );
 
-  const encrypted_string = (await data.json())["data"];
+  let data = [];
 
-  const decryptedData = decryptAesEcb(encrypted_string);
+  let pageNumber = 0;
+  let pageSize = 1000;
 
-  return JSON.parse(decryptedData);
+  while (true) {
+    url.searchParams.set("pageNumber", pageNumber.toString());
+    url.searchParams.set("pageSize", pageSize.toString());
+    url.searchParams.set("starttime", "2024-01-01");
+    url.searchParams.set("endtime", "2024-12-31");
+    url.searchParams.set("idserial", id);
+    url.searchParams.set("tradetype", "-1");
+
+    console.log(url.toString());
+
+    const response = await fetch(url.toString(), {
+      method: "POST",
+      headers: { Cookie: `servicehall=${serviceHall}` },
+    });
+
+    const json = await response.json();
+
+    const encryptedString = json["data"];
+
+    const decryptedData = decryptAesEcb(encryptedString);
+
+    const parsedData = JSON.parse(decryptedData);
+
+    data.push(...parsedData["resultData"]["rows"]);
+
+    if (parsedData["resultData"]["total"] < (pageNumber + 1) * pageSize) {
+      break;
+    }
+
+    pageNumber++;
+  }
+
+  return data;
 }
 
 function decryptAesEcb(encrypted: string) {
@@ -34,7 +66,7 @@ function decryptAesEcb(encrypted: string) {
 export async function genReport(id: string, serviceHall: string) {
   const data = await fetchData(id, serviceHall);
 
-  const dt = cleanDataFrame(createDataTable(data.resultData.rows));
+  const dt = cleanDataFrame(createDataTable(data));
   const mdt = constructMealDataTable(dt);
   return analyze(dt, mdt);
 }
