@@ -27,7 +27,7 @@ export const PosterBasicStats = forwardRef(function PosterBasicStats(
         </div>
         <div className="mt-[10px] text-[12px]">在这一年里:</div>
         <div>
-          你在<LocationHighlight>华子食堂</LocationHighlight>花了
+          你一共花了
           <NumberHighlight>{totalAmount / 100}</NumberHighlight>元
         </div>
         <div>
@@ -71,7 +71,7 @@ export const PosterFavorite = forwardRef(function PosterFavorite(
           是你最慷慨投入的地方
         </div>
         <div>
-          你在那里共计花费了
+          你在那共花费
           <NumberHighlight>{mostSpentCafeteriaAmount / 100}</NumberHighlight>元
         </div>
         <div className="text-right">
