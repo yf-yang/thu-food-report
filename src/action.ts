@@ -22,8 +22,6 @@ export async function fetchData(id: string, serviceHall: string) {
     url.searchParams.set("idserial", id);
     url.searchParams.set("tradetype", "-1");
 
-    console.log(url.toString());
-
     const response = await fetch(url.toString(), {
       method: "POST",
       headers: { Cookie: `servicehall=${serviceHall}` },
