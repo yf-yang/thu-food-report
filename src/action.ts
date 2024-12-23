@@ -95,7 +95,11 @@ export async function createSession(formData: FormData) {
   const sessions = db.collection("sessions");
   await sessions.insertOne({ [sessionKey]: id });
   const data = db.collection("data");
-  await data.insertOne({ [id]: { rawData, lastUpdated: new Date() } });
+  await data.updateOne(
+    { [id]: { $exists: true } },
+    { $set: { [id]: { rawData, lastUpdated: new Date() } } },
+    { upsert: true }
+  );
   redirect(`/report/${sessionKey}`);
 }
 
