@@ -17,7 +17,7 @@ async function fetchData(id: string, serviceHall: string) {
     "https://card.tsinghua.edu.cn/business/querySelfTradeList"
   );
 
-  const data = [];
+  let data = [];
 
   let pageNumber = 0;
   const pageSize = 1000;
@@ -61,12 +61,17 @@ async function fetchData(id: string, serviceHall: string) {
     pageNumber++;
   }
 
-  for (const row of data) {
+  data = data.filter((row) => {
     if (row["meraddr"] === "-") {
-      // console.log(row);
-      row["meraddr"] = row["mername"].split("_")[0];
+      if (row["mername"]) {
+        row["meraddr"] = row["mername"].split("_")[0];
+        return true;
+      } else {
+        return false;
+      }
     }
-  }
+    return true;
+  });
 
   return data;
 }
