@@ -551,14 +551,17 @@ export const PosterScore = forwardRef(function PosterScore(
           <div>我的 2024 《日肥学导论》成绩单</div>
         </div>
         <div className="flex flex-row justify-between mt-[20px] mx-[10px]">
-          <div className="text-left flex flex-col justify-between">
+          <div className="text-left flex flex-col justify-between w-40">
             <div>总消费金额: {data.totalAmount * 0.01}</div>
             <div>吃食堂顿数: {data.totalMeals}</div>
             <div>打卡食堂数: {data.numUniqueCafeterias}</div>
           </div>
           <div className="text-center">
             <div>
-              总分:<NumberHighlight>{score.toFixed(1)}</NumberHighlight>
+              总分:
+              <NumberHighlight>
+                {score > 100 ? 100 : score.toFixed(1)}
+              </NumberHighlight>
             </div>
             <div>
               评级:<NumberHighlight>{rank}</NumberHighlight>
