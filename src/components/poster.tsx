@@ -454,9 +454,9 @@ export const PosterScore = forwardRef(function PosterScore(
   ref: ForwardedRef<HTMLDivElement>
 ) {
   const score =
-    data.totalAmount * 0.0001 +
-    data.totalMeals * 0.02 +
-    data.numUniqueCafeterias;
+    data.totalAmount * 0.00003 +
+    data.totalMeals * 0.01 +
+    data.numUniqueCafeterias * 6;
 
   const rank = ((score: number) => {
     if (score >= 100) {
@@ -550,7 +550,7 @@ export const PosterScore = forwardRef(function PosterScore(
         <div className="text-center mt-[20px]">
           <div>我的 2024 《日肥学导论》成绩单</div>
         </div>
-        <div className="flex flex-row justify-between mt-[20px] mx-[10px]">
+        <div className="flex flex-row justify-between mt-[20px] mx-[5px]">
           <div className="text-left flex flex-col justify-between w-40">
             <div>总消费金额: {data.totalAmount * 0.01}</div>
             <div>吃食堂顿数: {data.totalMeals}</div>
