@@ -59,14 +59,14 @@ export default async function ReportPage({
     throw e;
   }
 
-  const {lastUpdated} = reportData;
+  const { lastUpdated } = reportData;
 
   return (
     <main className="flex flex-col items-center justify-center px-8 py-2">
       <div className="text-right text-gray-500 text-sm mb-4">
         最后更新于 {lastUpdated.toLocaleString()}
       </div>
-      <h1 className="text-3xl font-bold mb-2">食在华子</h1>
+      <h1 className="text-3xl font-bold mb-2">《日肥学导论》</h1>
       <h3 className="text-xl font-bold mb-2">2024华子食堂消费报告</h3>
       <ReportCarousel reportData={reportData} />
     </main>
