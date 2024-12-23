@@ -6,8 +6,8 @@ import * as aq from "arquero";
 import { op } from "arquero";
 import { createDecipheriv } from "crypto";
 import client from "./mongo";
-import { customAlphabet } from 'nanoid';
-import { nolookalikesSafe } from 'nanoid-dictionary';
+import { customAlphabet } from "nanoid";
+import { nolookalikesSafe } from "nanoid-dictionary";
 import { redirect } from "next/navigation";
 
 const createSessionKey = customAlphabet(nolookalikesSafe);
@@ -94,7 +94,7 @@ export async function createSession(formData: FormData) {
   const id = formData.get("id") as string;
   const serviceHall = formData.get("serviceHall") as string;
   const rawData = await fetchData(id, serviceHall);
-  
+
   const db = client.db("food");
   const sessionKey = createSessionKey();
   const sessions = db.collection("sessions");
@@ -161,6 +161,7 @@ function cleanDataFrame(dt: aq.ColumnTable) {
   return dt.filter(
     (d) =>
       !op.match(d.stall, /饮水|淋浴|天猫|学生卡|打印|游泳|图书馆/, 0) &&
+      !op.match(d.cafeteria, /图书馆/, 0) &&
       d.code === "1210"
   );
 }
