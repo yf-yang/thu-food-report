@@ -23,7 +23,7 @@ import {
 } from "./poster";
 import html2canvas from "html2canvas";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import copy from 'copy-to-clipboard'
+import copy from "copy-to-clipboard";
 import Link from "next/link";
 
 export default function ReportCarousel({
@@ -76,7 +76,7 @@ export default function ReportCarousel({
     setTimeout(() => {
       setCopied(false);
     }, 3000);
-  }
+  };
 
   return (
     <>
@@ -152,7 +152,7 @@ export default function ReportCarousel({
           保存图片
         </Button>
         <Button onClick={handleCopy} variant="secondary">
-          {copied ? "链接已复制!" : "分享我的报告"}
+          {copied ? "链接已复制!" : "分享本报告"}
         </Button>
         <Link href="/about">
           <Button variant="secondary">问题反馈 / 我想参与</Button>
