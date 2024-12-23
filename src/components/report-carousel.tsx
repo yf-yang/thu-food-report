@@ -22,6 +22,7 @@ import {
 } from "./poster";
 import html2canvas from "html2canvas";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import copy from 'copy-to-clipboard'
 
 export default function ReportCarousel({
   reportData,
@@ -30,6 +31,7 @@ export default function ReportCarousel({
 }) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [copied, setCopied] = useState(false);
   const refs = useMemo(
     () => Array.from({ length: 9 }).map(() => createRef<HTMLDivElement>()),
     []
@@ -65,6 +67,14 @@ export default function ReportCarousel({
       console.error("Error capturing element:", error);
     }
   };
+
+  const handleCopy = () => {
+    copy(window.location.href);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  }
 
   return (
     <>
@@ -132,9 +142,12 @@ export default function ReportCarousel({
           <span className="sr-only">Next slide</span>
         </Button>
       </div>
-      <div className="mt-2 flex justify-between w-[240px]">
+      <div className="mt-2 flex justify-between w-[300px]">
         <Button onClick={handleSave} variant="secondary">
           保存图片
+        </Button>
+        <Button onClick={handleCopy} variant="secondary">
+          {copied ? "链接已复制!": "分享我的报告"}
         </Button>
         <Button variant="secondary">关于我们</Button>
       </div>
