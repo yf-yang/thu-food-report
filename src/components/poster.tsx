@@ -552,7 +552,7 @@ export const PosterScore = forwardRef(function PosterScore(
         </div>
         <div className="flex flex-row justify-between mt-[20px] mx-[5px]">
           <div className="text-left flex flex-col justify-between w-40">
-            <div>总消费金额: {data.totalAmount * 0.01}</div>
+            <div>总消费金额: {(data.totalAmount * 0.01).toFixed(2)}</div>
             <div>吃食堂顿数: {data.totalMeals}</div>
             <div>打卡食堂数: {data.numUniqueCafeterias}</div>
           </div>
