@@ -1,10 +1,18 @@
 "use server";
 
+// cSpell:ignore nolookalikes, arquero, idserial, servicehall, meraddr, mername, txamt, txcode, tradetype, txdate, groupby
+
 import * as aq from "arquero";
 import { op } from "arquero";
 import { createDecipheriv } from "crypto";
+import client from "./mongo";
+import { customAlphabet } from 'nanoid';
+import { nolookalikesSafe } from 'nanoid-dictionary';
+import { redirect } from "next/navigation";
 
-export async function fetchData(id: string, serviceHall: string) {
+const createSessionKey = customAlphabet(nolookalikesSafe);
+
+async function fetchData(id: string, serviceHall: string) {
   const url = new URL(
     "https://card.tsinghua.edu.cn/business/querySelfTradeList"
   );
@@ -77,16 +85,41 @@ function decryptAesEcb(encrypted: string) {
   return decryptedData;
 }
 
-export async function genReport(id: string, serviceHall: string) {
-  const data = await fetchData(id, serviceHall);
+export async function createSession(formData: FormData) {
+  const id = formData.get("id") as string;
+  const serviceHall = formData.get("serviceHall") as string;
+  const rawData = await fetchData(id, serviceHall);
+  
+  const db = client.db("food");
+  const sessionKey = createSessionKey();
+  const sessions = db.collection("sessions");
+  await sessions.insertOne({ [sessionKey]: id });
+  const data = db.collection("data");
+  await data.insertOne({ [id]: { rawData, lastUpdated: new Date() } });
+  redirect(`/report/${sessionKey}`);
+}
 
-  if (!data.length) {
+export async function genReport(sessionKey: string) {
+  const db = client.db("food");
+  const sessions = db.collection("sessions");
+  const data = db.collection("data");
+  const session = await sessions.findOne({ [sessionKey]: { $exists: true } });
+  if (!session) {
+    throw new Error("missing");
+  }
+  const id = session[sessionKey];
+  const doc = await data.findOne({ [id]: { $exists: true } });
+  if (!doc) {
+    throw new Error("missing");
+  }
+  const { rawData, lastUpdated } = doc[id];
+
+  if (!rawData.length) {
     throw new Error("empty");
   }
-
-  const dt = cleanDataFrame(createDataTable(data));
+  const dt = cleanDataFrame(createDataTable(rawData));
   const mdt = constructMealDataTable(dt);
-  return analyze(dt, mdt);
+  return { ...analyze(dt, mdt), lastUpdated };
 }
 
 const names = {
@@ -202,8 +235,8 @@ function basicStats(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
     })
     .object(0) as {
     totalAmount: number;
-    numUniqueCafeterias: string[];
-    numUniqueStalls: string[];
+    numUniqueCafeterias: number;
+    numUniqueStalls: number;
   };
   const { totalMeals } = mdt
     .rollup({

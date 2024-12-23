@@ -5,17 +5,16 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default async function ReportPage({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ session: string }>;
 }) {
-  const serviceHall = (await searchParams).serviceHall as string;
-  const id = (await searchParams).id as string;
+  const sessionKey = (await params).session as string;
 
-  if (!serviceHall || !id) {
+  if (!sessionKey) {
     return (
       <div>
-        页面URL提供的参数错误
+        页面不存在
         <Link href="/">
           <Button>回到首页</Button>
         </Link>
@@ -25,13 +24,22 @@ export default async function ReportPage({
 
   let reportData: ReportData;
   try {
-    reportData = await genReport(id, serviceHall);
+    reportData = await genReport(sessionKey);
   } catch (e) {
     if (e instanceof Error) {
       if (e.message === "empty") {
         return (
           <div>
             看起来你没有任何消费记录
+            <Link href="/">
+              <Button>回到首页</Button>
+            </Link>
+          </div>
+        );
+      } else if (e.message === "missing") {
+        return (
+          <div>
+            页面不存在
             <Link href="/">
               <Button>回到首页</Button>
             </Link>
@@ -50,8 +58,14 @@ export default async function ReportPage({
     }
     throw e;
   }
+
+  const {lastUpdated} = reportData;
+
   return (
     <main className="flex flex-col items-center justify-center p-16">
+      <div className="text-right text-gray-500 text-sm mb-4">
+        最后更新于 {lastUpdated.toLocaleString()}
+      </div>
       <h1 className="text-3xl font-bold mb-2">食在华子</h1>
       <h3 className="text-xl font-bold mb-2">2024华子食堂消费报告</h3>
       <ReportCarousel reportData={reportData} />

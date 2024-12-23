@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Form from "next/form";
 import { Button } from "./ui/button";
+import { createSession } from "@/action";
 
 export default function EntryForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,7 +11,7 @@ export default function EntryForm() {
   }
 
   return (
-    <Form action="/report" className="space-y-4" onSubmit={onSubmit}>
+    <Form action={createSession} className="space-y-4" onSubmit={onSubmit}>
       <div>
         <label
           htmlFor="serviceHall"
