@@ -23,6 +23,7 @@ import {
 import html2canvas from "html2canvas";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import copy from 'copy-to-clipboard'
+import Link from "next/link";
 
 export default function ReportCarousel({
   reportData,
@@ -142,14 +143,16 @@ export default function ReportCarousel({
           <span className="sr-only">Next slide</span>
         </Button>
       </div>
-      <div className="mt-2 flex justify-between w-[300px]">
+      <div className="mt-2 flex flex-col items-stretch w-40 gap-4">
         <Button onClick={handleSave} variant="secondary">
           保存图片
         </Button>
         <Button onClick={handleCopy} variant="secondary">
-          {copied ? "链接已复制!": "分享我的报告"}
+          {copied ? "链接已复制!" : "分享我的报告"}
         </Button>
-        <Button variant="secondary">关于我们</Button>
+        <Link href="/about">
+          <Button variant="secondary">问题反馈 / 我想参与</Button>
+        </Link>
       </div>
     </>
   );

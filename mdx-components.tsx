@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
-import Image from "next/image";
 import Link from "next/link";
+
+import './src/app/globals.css'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -36,9 +37,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <code className="relative rounded bg-stone-200 py-[0.2rem] px-[0.3rem] font-mono text-sm font-semibold text-zinc-900 dark:bg-stone-700 dark:text-stone-200">
         {children}
       </code>
-    ),
-    img: ({ src, alt }) => (
-      <Image src={src ?? ""} alt={alt ?? ""} width={800} height={600} />
     ),
     ...components,
   };

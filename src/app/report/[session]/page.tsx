@@ -62,7 +62,7 @@ export default async function ReportPage({
   const {lastUpdated} = reportData;
 
   return (
-    <main className="flex flex-col items-center justify-center p-16">
+    <main className="flex flex-col items-center justify-center px-8 py-2">
       <div className="text-right text-gray-500 text-sm mb-4">
         最后更新于 {lastUpdated.toLocaleString()}
       </div>
