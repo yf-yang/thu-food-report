@@ -131,7 +131,8 @@
         "cn\\(([^)]*)\\)",
         "(?:'|\"|`)([^']*)(?:'|\"|`)"
       ],
-    ]
+    ],
+    "remote.localPortHost": "allInterfaces"
   },
   "folders": [
     {
