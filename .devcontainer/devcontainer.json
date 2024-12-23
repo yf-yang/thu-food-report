@@ -21,7 +21,8 @@
 				"ms-vscode.vscode-typescript-next",
 				"streetsidesoftware.code-spell-checker",
 				"mongodb.mongodb-vscode",
-				"bradlc.vscode-tailwindcss"
+				"bradlc.vscode-tailwindcss",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
