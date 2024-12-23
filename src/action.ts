@@ -118,7 +118,7 @@ function cleanDataFrame(dt: aq.ColumnTable) {
   // XXX: Seems code 1210 are credits, other codes are debits. Any other credit codes?
   return dt.filter(
     (d) =>
-      !op.match(d.stall, /饮水|淋浴|天猫|学生卡|打印|游泳/, 0) &&
+      !op.match(d.stall, /饮水|淋浴|天猫|学生卡|打印|游泳|图书馆/, 0) &&
       d.code === "1210"
   );
 }
