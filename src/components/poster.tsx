@@ -557,12 +557,10 @@ export const PosterScore = forwardRef(function PosterScore(
             <div>打卡食堂数: {data.numUniqueCafeterias}</div>
           </div>
           <div className="text-center">
-            <div>
-              总分:
-              <NumberHighlight>
-                {score > 100 ? 100 : score.toFixed(1)}
-              </NumberHighlight>
-            </div>
+            <NumberHighlight>
+              {score > 100 ? 100 : score.toFixed(1)}
+            </NumberHighlight>
+
             <div>
               评级:<NumberHighlight>{rank}</NumberHighlight>
             </div>
