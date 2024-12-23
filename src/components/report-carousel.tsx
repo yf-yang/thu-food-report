@@ -147,15 +147,18 @@ export default function ReportCarousel({
           <span className="sr-only">Next slide</span>
         </Button>
       </div>
-      <div className="mt-2 flex flex-col items-stretch w-40 gap-4">
+      <div className="mt-2 flex flex-col items-stretch w-40 gap-2">
         <Button onClick={handleSave} variant="secondary">
           保存图片
         </Button>
         <Button onClick={handleCopy} variant="secondary">
           {copied ? "链接已复制!" : "分享本报告"}
         </Button>
-        <Link href="/about">
-          <Button variant="secondary">问题反馈 / 我想参与</Button>
+        <Link href="/about" className="flex-1 flex items-stretch justify-center">
+          <Button className="w-full h-full" variant="secondary">问题反馈 / 我想参与</Button>
+        </Link>
+        <Link href="/" className="flex-1 flex items-stretch justify-center">
+          <Button className="w-full h-full" variant="secondary">返回</Button>
         </Link>
       </div>
     </>
