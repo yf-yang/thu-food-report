@@ -562,5 +562,6 @@ function maxConsecutiveNoRecordDates(dt: aq.ColumnTable, _mdt: aq.ColumnTable) {
     numVisitedDates,
     maxConsecutiveNoRecordDateBegin,
     maxConsecutiveNoRecordDateEnd,
+    maxConsecutiveNoRecordDays,
   };
 }

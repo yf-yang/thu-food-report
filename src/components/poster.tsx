@@ -394,6 +394,7 @@ export const PosterVisitedDays = forwardRef(function PosterVisitedDays(
     numVisitedDates,
     maxConsecutiveNoRecordDateBegin,
     maxConsecutiveNoRecordDateEnd,
+    maxConsecutiveNoRecordDays,
   } = data;
 
   return (
@@ -404,8 +405,7 @@ export const PosterVisitedDays = forwardRef(function PosterVisitedDays(
           <div>
             <NumberHighlight>{numVisitedDates}</NumberHighlight>天
           </div>
-          {maxConsecutiveNoRecordDateBegin === null ||
-          maxConsecutiveNoRecordDateEnd === null ? (
+          {maxConsecutiveNoRecordDays === 0 ? (
             <>
               <div>除去假期</div>
               <div>每天都能在华子食堂看到你的身影</div>
@@ -415,7 +415,7 @@ export const PosterVisitedDays = forwardRef(function PosterVisitedDays(
             <>
               <div>
                 <DateHighlight
-                  date={new Date(maxConsecutiveNoRecordDateBegin)}
+                  date={new Date(maxConsecutiveNoRecordDateBegin!)}
                 />
               </div>
               <div>没有华子食堂的那一天</div>
@@ -426,10 +426,10 @@ export const PosterVisitedDays = forwardRef(function PosterVisitedDays(
               <div>
                 从
                 <DateHighlight
-                  date={new Date(maxConsecutiveNoRecordDateBegin)}
+                  date={new Date(maxConsecutiveNoRecordDateBegin!)}
                 />
                 到
-                <DateHighlight date={new Date(maxConsecutiveNoRecordDateEnd)} />
+                <DateHighlight date={new Date(maxConsecutiveNoRecordDateEnd!)} />
               </div>
               <div>没有华子食堂的那些天</div>
               <div>你吃的怎么样</div>
