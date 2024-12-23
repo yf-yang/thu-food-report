@@ -47,7 +47,7 @@
         "mode": "auto"
       }
     ],
-    "debug.javascript.autoAttachFilter": "onlyWithFlag",
+    "debug.javascript.autoAttachFilter": "smart",
     "better-comments.tags": [
       {
         "tag": "!",
