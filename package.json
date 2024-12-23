@@ -17,6 +17,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "copy-to-clipboard": "^3.3.3",
+    "d3": "^7.9.0",
     "embla-carousel-react": "^8.5.1",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.469.0",
@@ -26,12 +27,14 @@
     "next": "15.1.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^2.15.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/d3": "^7.4.3",
     "@types/mdx": "^2.0.13",
     "@types/nanoid-dictionary": "^4.2.3",
     "@types/node": "^20",

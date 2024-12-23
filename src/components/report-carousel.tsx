@@ -17,6 +17,7 @@ import {
   PosterMeanCost,
   PosterMostExpensive,
   PosterMostNumStalls,
+  PosterScore,
   PosterVisitedDays,
   ReportData,
 } from "./poster";
@@ -34,7 +35,7 @@ export default function ReportCarousel({
   const [current, setCurrent] = useState(0);
   const [copied, setCopied] = useState(false);
   const refs = useMemo(
-    () => Array.from({ length: 9 }).map(() => createRef<HTMLDivElement>()),
+    () => Array.from({ length: 10 }).map(() => createRef<HTMLDivElement>()),
     []
   );
 
@@ -108,6 +109,9 @@ export default function ReportCarousel({
           <CarouselItem>
             <PosterVisitedDays data={reportData} ref={refs[8]} />
           </CarouselItem>
+          <CarouselItem>
+            <PosterScore data={reportData} ref={refs[9]} />
+          </CarouselItem>
         </CarouselContent>
       </Carousel>
       <div className="flex justify-between w-[240px] mt-2">
@@ -126,7 +130,7 @@ export default function ReportCarousel({
           <span className="sr-only">Previous slide</span>
         </Button>
         <div className="py-2 text-sm text-muted-foreground">
-          {current + 1} / 9
+          {current + 1} / 10
         </div>
         <Button
           size="icon"

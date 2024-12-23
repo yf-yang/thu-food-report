@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { ForwardedRef, forwardRef, PropsWithChildren } from "react";
+import * as d3 from "d3";
+import { Cell, Pie, PieChart } from "recharts";
 
 export type ReportData = Awaited<
   ReturnType<typeof import("@/action")["genReport"]>
@@ -429,13 +431,139 @@ export const PosterVisitedDays = forwardRef(function PosterVisitedDays(
                   date={new Date(maxConsecutiveNoRecordDateBegin!)}
                 />
                 到
-                <DateHighlight date={new Date(maxConsecutiveNoRecordDateEnd!)} />
+                <DateHighlight
+                  date={new Date(maxConsecutiveNoRecordDateEnd!)}
+                />
               </div>
               <div>没有华子食堂的那些天</div>
               <div>你吃的怎么样</div>
             </>
           )}
         </div>
+      </TextContainer>
+    </Container>
+  );
+});
+
+export const PosterScore = forwardRef(function PosterScore(
+  {
+    data,
+  }: {
+    data: ReportData;
+  },
+  ref: ForwardedRef<HTMLDivElement>
+) {
+  const score =
+    data.totalAmount * 0.0001 +
+    data.totalMeals * 0.02 +
+    data.numUniqueCafeterias;
+
+  const rank = ((score: number) => {
+    if (score >= 100) {
+      return "A+";
+    } else if (score >= 95) {
+      return "A";
+    } else if (score >= 90) {
+      return "A-";
+    } else if (score >= 85) {
+      return "B+";
+    } else if (score >= 80) {
+      return "B";
+    } else if (score >= 77) {
+      return "B-";
+    } else if (score >= 73) {
+      return "C+";
+    } else if (score >= 70) {
+      return "C";
+    } else if (score >= 67) {
+      return "C-";
+    } else if (score >= 63) {
+      return "D+";
+    } else if (score >= 60) {
+      return "D";
+    } else {
+      return "?";
+    }
+  })(score);
+
+  const dataVisulization = (data: ReportData) => {
+    const cafeteriasSpent = data.cafeteriasSpent.map((d) => {
+      return {
+        ...d,
+        amount: d.amount / data.totalAmount,
+      };
+    });
+
+    const renderLabel = ({
+      cx,
+      cy,
+      midAngle,
+      innerRadius,
+      outerRadius,
+      percent,
+      index,
+    }: any) => {
+      // const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+      const radius = outerRadius * 1.1;
+      const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
+      const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
+
+      return (
+        <text
+          x={x}
+          y={y}
+          fill="black"
+          textAnchor={x > cx ? "start" : "end"}
+          dominantBaseline="central"
+          className="text-[10px]"
+        >
+          {percent > 0.1 ? `${cafeteriasSpent[index].cafeteria}` : ""}
+        </text>
+      );
+    };
+
+    return (
+      <PieChart width={200} height={120}>
+        <Pie
+          data={cafeteriasSpent}
+          dataKey="amount"
+          nameKey="cafeteria"
+          cx="50%"
+          cy="50%"
+          outerRadius={50}
+          label={renderLabel}
+          labelLine={false}
+        >
+          {cafeteriasSpent.map((_entry, index) => (
+            <Cell key={`cell-${index}`} fill={d3.schemePastel1[index % 9]} />
+          ))}
+        </Pie>
+      </PieChart>
+    );
+  };
+
+  return (
+    <Container ref={ref} className="bg-[#FDCBD3]">
+      <TextContainer>
+        <div className="text-center mt-[20px]">
+          <div>我的 2024 《日肥学导论》成绩单</div>
+        </div>
+        <div className="flex flex-row justify-between mt-[20px] mx-[10px]">
+          <div className="text-left flex flex-col justify-between">
+            <div>总消费金额: {data.totalAmount * 0.01}</div>
+            <div>吃食堂顿数: {data.totalMeals}</div>
+            <div>打卡食堂数: {data.numUniqueCafeterias}</div>
+          </div>
+          <div className="text-center">
+            <div>
+              总分:<NumberHighlight>{score.toFixed(1)}</NumberHighlight>
+            </div>
+            <div>
+              评级:<NumberHighlight>{rank}</NumberHighlight>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center">{dataVisulization(data)}</div>
       </TextContainer>
     </Container>
   );

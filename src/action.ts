@@ -273,16 +273,26 @@ function favorite(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
       count: number;
     };
 
-  const { cafeteria: mostSpentCafeteria, amount: mostSpentCafeteriaAmount } = dt
+  const spent = dt
     .groupby("cafeteria")
     .rollup({
       amount: op.sum("amount"),
     })
-    .orderby(aq.desc("amount"))
-    .object(0) as {
+    .orderby(aq.desc("amount"));
+
+  const { cafeteria: mostSpentCafeteria, amount: mostSpentCafeteriaAmount } =
+    spent.object(0) as {
+      cafeteria: string;
+      amount: number;
+    };
+
+  // const spentCafeterias = spent.array("cafeteria") as string[];
+  // const spentCafeteriasAmount = spent.array("amount") as number[];
+
+  const cafeteriasSpent = spent.objects() as {
     cafeteria: string;
     amount: number;
-  };
+  }[];
 
   const { stall: mostSpentStall, amount: mostSpentStallAmount } = dt
     // @ts-expect-error -- it works
@@ -304,6 +314,7 @@ function favorite(dt: aq.ColumnTable, mdt: aq.ColumnTable) {
     mostSpentCafeteriaAmount,
     mostSpentStall,
     mostSpentStallAmount,
+    cafeteriasSpent,
   };
 }
 
