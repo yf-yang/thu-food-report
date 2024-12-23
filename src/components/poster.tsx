@@ -494,15 +494,17 @@ export const PosterScore = forwardRef(function PosterScore(
       };
     });
 
-    const renderLabel = ({
-      cx,
-      cy,
-      midAngle,
-      innerRadius,
-      outerRadius,
-      percent,
-      index,
-    }: any) => {
+    const renderLabel = (
+      {
+        cx,
+        cy,
+        midAngle,
+        innerRadius, // eslint-disable-line @typescript-eslint/no-unused-vars
+        outerRadius,
+        percent,
+        index,
+      }: any // eslint-disable-line @typescript-eslint/no-explicit-any
+    ) => {
       // const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
       const radius = outerRadius * 1.1;
       const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
